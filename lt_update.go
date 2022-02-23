@@ -3,13 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	ws "github.com/gorilla/websocket"
 	uj "github.com/nanoscopic/ujsonin/v2/mod"
-	"log"
-	"net/http"
-	"os/exec"
-	"time"
 )
 
 type ProvSafariTestMsg struct {
@@ -149,42 +148,14 @@ func (self *DevHandler) handleDeviceRestart(c *gin.Context) {
 	done := make(chan bool)
 
 	restart := "false"
+	pc.doRestart(udid, func(_ uj.JNode, json []byte) {
+		root, _ := uj.Parse(json)
 
-	if pc.provChan == nil {
-		fmt.Println("provider is not enabled, loading plist of provider for device_id ", udid)
-		ReloadIosProvider(udid)
-		retryCount := 0
-		for {
-			if retryCount > 5 {
-				fmt.Println("could not connect with provider after 5 seconds, skipping restart of streaming app of device_id", udid)
-				break
-			}
-			if pc.provChan == nil {
-				retryCount++
-				fmt.Println("provider is still not in running state for device_id", udid, " retry_count", retryCount)
-				time.Sleep(time.Second * 1)
-			} else {
-				retryCount = 6
-				pc.doRestart(udid, func(_ uj.JNode, json []byte) {
-					root, _ := uj.Parse(json)
+		restart = root.Get("restart").String()
 
-					restart = root.Get("restart").String()
+		done <- true
+	})
 
-					done <- true
-
-				})
-				break
-			}
-		}
-	} else {
-		pc.doRestart(udid, func(_ uj.JNode, json []byte) {
-			root, _ := uj.Parse(json)
-
-			restart = root.Get("restart").String()
-
-			done <- true
-		})
-	}
 	<-done
 
 	//
@@ -426,21 +397,4 @@ func (self *DevHandler) getPcWS(udid string) (*ProviderConnection, string) {
 		fmt.Printf("Could not get provider for udid:%s\n", udid)
 	}
 	return provConn, udid
-}
-
-func ReloadIosProvider(deviceId string) (bool, string) {
-	unloadCmdString := fmt.Sprintf("sudo %s unload -w  /Library/LaunchDaemons/com.lambda.ios_remote_provider_%s.plist", binaries.MobileBinaries["launchctl"], deviceId)
-	_, err := exec.Command("bash", "-c", unloadCmdString).Output()
-	if err != nil {
-		global.Logger.Errorf("Error Unloading iOS remote provider : %s: %s: %s", deviceId, err.Error(), unloadCmdString)
-		return false, "Failure"
-	}
-	loadCmdString := fmt.Sprintf("sudo %s load -w  /Library/LaunchDaemons/com.lambda.ios_remote_provider_%s.plist", binaries.MobileBinaries["launchctl"], deviceId)
-	_, loadErr := exec.Command("bash", "-c", loadCmdString).Output()
-	if loadErr != nil {
-		global.Logger.Errorf("Error Loading iOS remote provider : %s: %s", deviceId, err.Error())
-		return false, "Failure"
-	}
-	global.Logger.Infof("Reload iOS Provider successful")
-	return true, "Success"
 }
