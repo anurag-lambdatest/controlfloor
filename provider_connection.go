@@ -389,3 +389,15 @@ func (self *ProviderConnection) doBrowserCleanup(udid string, bid string, onDone
 	}
 	self.provChan <- action
 }
+
+func (self *ProviderConnection) doRotate(udid string, isPortrait bool, onDone func(uj.JNode, []byte)) {
+	rotate := &ProvRotate{
+		udid:       udid,
+		isPortrait: isPortrait,
+	}
+	if self == nil || self.provChan == nil {
+		errorChannelGone(rotate)
+		return
+	}
+	self.provChan <- rotate
+}

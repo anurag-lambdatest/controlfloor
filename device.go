@@ -72,6 +72,7 @@ func (self *DevHandler) registerDeviceRoutes() {
 	uAuth.POST("/device/text", func(c *gin.Context) { self.handleText(c) })
 	uAuth.POST("/device/source", func(c *gin.Context) { self.handleSource(c) })
 	uAuth.POST("/device/shutdown", func(c *gin.Context) { self.handleShutdown(c) })
+	uAuth.POST("/device/rotate", func(c *gin.Context) { self.handleDeviceRotate(c) })
 
 	uAuth.GET("/device/info", func(c *gin.Context) { self.showDevInfo(c) })
 	aAuth.GET("/device", func(c *gin.Context) { self.showDevAdmin(c) })
@@ -145,6 +146,38 @@ type SDeviceWdaPort struct {
 	WdaPort int    `json:"wdaPort"     example:"8107"`
 	Ip      string `json:"ip"          example:"unknown or x.x.x.x"`
 	Mac     string `json:"mac"         example:"mac address..."`
+}
+
+func (self *DevHandler) handleDeviceRotate(c *gin.Context) {
+	pc, udid := self.getPc(c)
+	if pc == nil {
+		fmt.Println("provider connection not found for device ", udid)
+		c.HTML(http.StatusOK, "error", gin.H{
+			"text": "nok",
+		})
+		return
+	}
+	isPortrait, err := strconv.ParseBool(c.PostForm("isPortrait"))
+	if err != nil {
+		fmt.Println("invalid data received for device rotate for device : ", udid, " data : ", c.PostForm("isPortrait"))
+		c.HTML(http.StatusOK, "error", gin.H{
+			"text": "nok",
+		})
+		return
+	}
+	fmt.Printf("Request proto %s\n", c.Request.Proto)
+
+	done := make(chan bool)
+
+	pc.doRotate(udid, isPortrait, func(uj.JNode, []byte) {
+		done <- true
+	})
+
+	<-done
+
+	c.HTML(http.StatusOK, "error", gin.H{
+		"text": "ok",
+	})
 }
 
 func (self *DevHandler) showWdaPort(c *gin.Context) {

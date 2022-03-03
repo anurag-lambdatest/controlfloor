@@ -39,11 +39,25 @@ func (self *ProvDoubleclick) asText(id int16) string {
 	return fmt.Sprintf("{id:%d,type:\"doubleclick\",udid:\"%s\",x:%d,y:%d}\n", id, self.udid, self.x, self.y)
 }
 
+type ProvRotate struct {
+	udid       string
+	isPortrait bool
+	onRes      func(uj.JNode, []byte)
+}
+
 type ProvClick struct {
 	udid  string
 	x     int
 	y     int
 	onRes func(uj.JNode, []byte)
+}
+
+func (self *ProvRotate) resHandler() func(data uj.JNode, rawData []byte) {
+	return self.onRes
+}
+func (self *ProvRotate) needsResponse() bool { return true }
+func (self *ProvRotate) asText(id int16) string {
+	return fmt.Sprintf("{id:%d,type:\"rotate\",udid:\"%s\",isPortrait:%v}\n", id, self.udid, self.isPortrait)
 }
 
 func (self *ProvClick) resHandler() func(data uj.JNode, rawData []byte) {
@@ -166,30 +180,31 @@ func (self *ProvHardPress) asText(id int16) string {
 	return fmt.Sprintf("{id:%d,type:\"hardPress\",udid:\"%s\",x:%d,y:%d}\n", id, self.udid, self.x, self.y)
 }
 
-type ProvInitWebrtcMsg struct{
-    Id int16 `json:"id"`
-    Type string `json:"type"`
-    Udid string `json:"udid"`
-    Offer string `json:"offer"`
+type ProvInitWebrtcMsg struct {
+	Id    int16  `json:"id"`
+	Type  string `json:"type"`
+	Udid  string `json:"udid"`
+	Offer string `json:"offer"`
 }
 type ProvInitWebrtc struct {
-    udid string
-    offer string
-    onRes func( uj.JNode,[]byte )
+	udid  string
+	offer string
+	onRes func(uj.JNode, []byte)
 }
-func (self *ProvInitWebrtc) resHandler() (func(uj.JNode,[]byte) ) {
-    return self.onRes
+
+func (self *ProvInitWebrtc) resHandler() func(uj.JNode, []byte) {
+	return self.onRes
 }
-func (self *ProvInitWebrtc) needsResponse() (bool) { return true }
-func (self *ProvInitWebrtc) asText( id int16 ) (string) {
-    msg := ProvInitWebrtcMsg{
-        Id: id,
-        Type: "initWebrtc",
-        Udid: self.udid,
-        Offer: self.offer,
-    }
-    res, _ := json.Marshal( msg )
-    return string(res)
+func (self *ProvInitWebrtc) needsResponse() bool { return true }
+func (self *ProvInitWebrtc) asText(id int16) string {
+	msg := ProvInitWebrtcMsg{
+		Id:    id,
+		Type:  "initWebrtc",
+		Udid:  self.udid,
+		Offer: self.offer,
+	}
+	res, _ := json.Marshal(msg)
+	return string(res)
 }
 
 type ProvLongPress struct {
