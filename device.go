@@ -72,7 +72,7 @@ func (self *DevHandler) registerDeviceRoutes() {
 	uAuth.POST("/device/text", func(c *gin.Context) { self.handleText(c) })
 	uAuth.POST("/device/source", func(c *gin.Context) { self.handleSource(c) })
 	uAuth.POST("/device/shutdown", func(c *gin.Context) { self.handleShutdown(c) })
-	uAuth.POST("/device/rotate", func(c *gin.Context) { self.handleDeviceRotate(c) })
+	uAuth.POST("/device/rotate", func(c *gin.Context) { self.handleRotate(c) })
 
 	uAuth.GET("/device/info", func(c *gin.Context) { self.showDevInfo(c) })
 	aAuth.GET("/device", func(c *gin.Context) { self.showDevAdmin(c) })
@@ -148,7 +148,7 @@ type SDeviceWdaPort struct {
 	Mac     string `json:"mac"         example:"mac address..."`
 }
 
-func (self *DevHandler) handleDeviceRotate(c *gin.Context) {
+func (self *DevHandler) handleRotate(c *gin.Context) {
 	pc, udid := self.getPc(c)
 	if pc == nil {
 		fmt.Println("provider connection not found for device ", udid)

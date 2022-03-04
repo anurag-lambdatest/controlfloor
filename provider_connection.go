@@ -394,6 +394,7 @@ func (self *ProviderConnection) doRotate(udid string, isPortrait bool, onDone fu
 	rotate := &ProvRotate{
 		udid:       udid,
 		isPortrait: isPortrait,
+		onRes:      onDone,
 	}
 	if self == nil || self.provChan == nil {
 		errorChannelGone(rotate)
