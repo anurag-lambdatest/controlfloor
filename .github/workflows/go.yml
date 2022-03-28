@@ -1,10 +1,10 @@
 name: CF CI
 
 on:
-  create:
-     tags:
-       - '*'
-  workflow_dispatch:  
+  push:
+    branches: [ stage ]
+  pull_request:
+    branches: [ stage ]
 
 jobs:
   build:
@@ -25,6 +25,7 @@ jobs:
         run: |
           raw=$(git branch -r --contains ${{ github.ref }})
           branch=${raw/origin\/}
+          go mod tidy
           env GOOS=darwin go build -ldflags="-s -w -X 'main.BINARY_VERSION=${GITHUB_REF##*/}'" -o cf .
           ./cf -v
           
