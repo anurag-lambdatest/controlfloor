@@ -1,4 +1,4 @@
-name: RC CI
+name: CF CI
 
 on:
   create:
@@ -25,6 +25,6 @@ jobs:
         run: |
           raw=$(git branch -r --contains ${{ github.ref }})
           branch=${raw/origin\/}
-          env GOOS=darwin go build -X 'main.GitRelease=${GITHUB_REF##*/}' " -o cf .
+          env GOOS=darwin go build -ldflags="-s -w -X 'main.BINARY_VERSION=${GITHUB_REF##*/}'" -o cf .
           ./cf -v
           
