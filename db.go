@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
+	uj "github.com/LambdaTest/ujsonin_private/v2/mod"
 	_ "github.com/mattn/go-sqlite3"
-	uj "github.com/nanoscopic/ujsonin/v2/mod"
 	log "github.com/sirupsen/logrus"
 	"xorm.io/xorm"
 )

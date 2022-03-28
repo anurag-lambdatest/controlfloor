@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	uj "github.com/nanoscopic/ujsonin/v2/mod"
+	uj "github.com/LambdaTest/ujsonin_private/v2/mod"
 )
 
 type ProviderConnection struct {

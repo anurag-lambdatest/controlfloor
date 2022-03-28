@@ -15,7 +15,7 @@ if( ! -e "repos/iconify-json" ) {
 }
 
 if( ! -e "repos/ujsonin" ) {
-  `git clone https://github.com/nanoscopic/ujsonin repos/ujsonin`;
+  `git clone https://github.com/LambdaTest/ujsonin repos/ujsonin`;
 } else {
   #chdir "repos/jsonin";
   #`git pull`;

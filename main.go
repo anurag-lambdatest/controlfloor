@@ -6,11 +6,11 @@ import (
 	"os"
 	"os/exec"
 
+	_ "github.com/LambdaTest/controlfloor/docs"
+	adminauth "github.com/LambdaTest/controlfloor_auth_none"
+	cfauth "github.com/LambdaTest/controlfloor_auth_none"
+	uc "github.com/LambdaTest/uclop/mod"
 	"github.com/gin-gonic/gin"
-	_ "github.com/nanoscopic/controlfloor/docs"
-	cfauth "github.com/nanoscopic/controlfloor_auth"
-	adminauth "github.com/nanoscopic/controlfloor_auth_admin"
-	uc "github.com/nanoscopic/uclop/mod"
 	swagFiles "github.com/swaggo/files"
 	swag "github.com/swaggo/gin-swagger"
 )

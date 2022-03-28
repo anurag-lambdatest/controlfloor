@@ -2,14 +2,13 @@ module main.go
 
 go 1.12
 
-//replace github.com/nanoscopic/controlfloor_auth => ../controlfloor_auth
-replace github.com/nanoscopic/controlfloor_auth_admin => ../controlfloor_auth_none_b
-replace github.com/nanoscopic/controlfloor/docs => ./docs
-replace github.com/nanoscopic/controlfloor_auth => ../controlfloor_auth_none
-
-//replace github.com/nanoscopic/ujsonin/v2 => ../ujsonin/v2
+replace github.com/LambdaTest/controlfloor/docs => ./docs
 
 require (
+	github.com/LambdaTest/controlfloor/docs v0.0.0-00010101000000-000000000000
+	github.com/LambdaTest/controlfloor_auth_none v1.1.3
+	github.com/LambdaTest/uclop v1.0.0
+	github.com/LambdaTest/ujsonin_private/v2 v2.0.1
 	github.com/alexedwards/scs/v2 v2.4.0
 	github.com/foolin/goview v0.3.0
 	github.com/gin-gonic/gin v1.7.0
@@ -18,11 +17,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
-	github.com/nanoscopic/controlfloor/docs v0.0.0-00010101000000-000000000000
-	github.com/nanoscopic/controlfloor_auth v1.1.0
-    github.com/nanoscopic/controlfloor_auth_admin v1.1.0
-	github.com/nanoscopic/uclop v1.1.0
-	github.com/nanoscopic/ujsonin/v2 v2.0.6
 	github.com/sirupsen/logrus v1.8.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.3.1

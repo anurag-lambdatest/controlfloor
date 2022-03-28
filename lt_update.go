@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
+	uj "github.com/LambdaTest/ujsonin_private/v2/mod"
 	"github.com/gin-gonic/gin"
 	ws "github.com/gorilla/websocket"
-	uj "github.com/nanoscopic/ujsonin/v2/mod"
 )
 
 type ProvSafariTestMsg struct {

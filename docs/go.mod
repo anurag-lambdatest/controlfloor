@@ -1,3 +1,3 @@
-module github.com/nanoscopic/controlfloor/docs
+module github.com/LambdaTest/controlfloor/docs
 
 go 1.16

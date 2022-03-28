@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	uj "github.com/nanoscopic/ujsonin/v2/mod"
+	uj "github.com/LambdaTest/ujsonin_private/v2/mod"
 )
 
 type ProvBase interface {

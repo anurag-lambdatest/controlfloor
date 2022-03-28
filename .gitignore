@@ -5,3 +5,4 @@ server.crt
 server.key
 cert.conf
 mains
+.idea/*
